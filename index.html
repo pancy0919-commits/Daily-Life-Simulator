@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>十年：從8歲到18歲的日常迴圈</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+            border: 4px solid #38bdf8;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .status-box {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 12px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .age-display {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f43f5e;
+            margin-bottom: 5px;
+        }
+        .day-display {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .routine-box {
+            width: 100%;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px dashed #64748b;
+        }
+        .routine-text {
+            font-size: 15px;
+            color: #e2e8f0;
+            line-height: 1.6;
+            min-height: 50px;
+        }
+        .action-btn {
+            background-color: #38bdf8;
+            color: #0f172a;
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(56,189,248,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .action-btn:active { background-color: #0ea5e9; transform: scale(0.98); }
+
+        .screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background-color: #f43f5e;
+            color: #fff;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(244,63,94,0.4);
+        }
+        .btn:active { background-color: #e11d48; transform: scale(0.96); }
+
+        .debug-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            background: #334155;
+            color: #94a3b8;
+            border: 1px solid #64748b;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container" id="gameContainer">
+        <!-- 開始畫面 -->
+        <div id="startScreen" class="screen-overlay">
+            <h2 style="color: #38bdf8; margin-bottom: 10px; font-size: 20px;">🕰️ 十年：從8歲到18歲</h2>
+            <p style="font-size: 13px; color: #cbd5e0; max-width: 320px; line-height: 1.6; margin: 0 0 15px 0;">
+                每天過著規律而平凡的生活。<br>
+                上學、放學、寫功課、睡覺。<br>
+                <b>當你度過 3,650 天（10年），抵達 18 歲那年，將迎來改變一切的瞬間。</b>
+            </p>
+            <button class="btn" id="startBtn">開始人生迴圈</button>
+        </div>
+
+        <!-- 18歲成年特殊結局畫面 -->
+        <div id="endingScreen" class="screen-overlay" style="display: none; background: rgba(15, 23, 42, 0.98);">
+            <div style="font-size: 36px; margin-bottom: 2px;">🎓✨</div>
+            <h2 style="color: #ffd700; margin: 4px 0; font-size: 18px;">第 3650 天：迎向 18 歲的成年禮</h2>
+            <div id="endingContent" style="font-size: 12px; color: #e2e8f0; max-width: 420px; max-height: 200px; overflow-y: auto; text-align: left; background: #1e293b; padding: 12px; border-radius: 8px; border: 2px solid #ffd700; line-height: 1.6; margin-top: 8px;">
+            </div>
+            <button class="btn" style="background-color: #2ed573;" id="restartBtn">重新體驗人生</button>
+        </div>
+
+        <!-- 遊戲主介面 -->
+        <div class="status-box">
+            <div class="age-display" id="ageDisplay">年齡：8 歲 0 個月</div>
+            <div class="day-display" id="dayDisplay">已度過天數：第 1 天 / 3650 天</div>
+        </div>
+
+        <div class="routine-box">
+            <div class="routine-text" id="routineText">今天又是平常的上學日。鬧鐘響起，吃完早餐，背上書包去學校。</div>
+        </div>
+
+        <button class="action-btn" id="nextDayBtn">度過今天 (+1 天)</button>
+
+        <button class="debug-btn" id="debugBtn">⚡ 快轉 +364天</button>
+    </div>
+
+    <script>
+        const endingParagraphs = [
+            "當鬧鐘在早晨七點響起時，你下意識地想像往常一樣伸出手的按掉它，然後準備迎接又一個平凡的學校日。但鏡子裡的倒影停住了——你已經不再是那個8歲、背著過大書包的小孩了。",
+            "今天是你的 18 歲生日，也是這整整十年、三千六百五十個日子以來，唯一的轉捩點。桌上散落著過去十年累積的考卷、日記和泛黃的便條紙，每一天看起來都一模一樣，卻又在無形中將你雕刻成了一個大人。",
+            "回頭看去，那段漫長而規律的迴圈就像是一場長長的夢。你曾以為日子會永遠這樣平淡地重複下去，但時間從未停歇。今天，童年的圍牆正式倒塌，外面的世界鋪展在眼前。",
+            "你推開房門，陽光灑在臉上。背包裡裝著對未來的迷茫與憧憬，你終於走出了這個長達十年的日常迴圈。屬於你真正的冒險，現在才要開始。"
+        ];
+
+        const dailyEvents = [
+            "今天又是平常的上學日。老師在黑板上寫著公式，窗外的陽光灑進教室。",
+            "放學後和朋友在巷子裡踢足球，夕陽把影子拉得好長好長。",
+            "周末的午後在家寫作業，媽媽端了一盤切好的水果放在桌上。",
+            "期中考結束了，拿著成績單回家，心裡祈禱著不要挨罵。",
+            "寒假的日子裡，窩在暖被窩裡看著電視卡通，時間彷彿慢了下來。",
+            "新的一學年開始了，換到了新的教室，隔壁座位坐了一個新同學。",
+            "夏天的蟬鳴聲吵雜而漫長，拿著零錢去巷口便利商店買了一支冰棒。",
+            "晚上坐在書桌前發呆，看著窗外的夜空，思考著長大後會變成什麼樣子。"
+        ];
+
+        let totalDays = 1;
+        let ageYears = 8;
+        let ageMonths = 0;
+
+        const startScreen = document.getElementById("startScreen");
+        const endingScreen = document.getElementById("endingScreen");
+        const ageDisplay = document.getElementById("ageDisplay");
+        const dayDisplay = document.getElementById("dayDisplay");
+        const routineText = document.getElementById("routineText");
+        const nextDayBtn = document.getElementById("nextDayBtn");
+        const debugBtn = document.getElementById("debugBtn");
+
+        document.getElementById("startBtn").addEventListener("click", () => {
+            startScreen.style.display = "none";
+            updateDisplay();
+        });
+
+        document.getElementById("restartBtn").addEventListener("click", () => {
+            totalDays = 1;
+            ageYears = 8;
+            ageMonths = 0;
+            endingScreen.style.display = "none";
+            updateDisplay();
+        });
+
+        nextDayBtn.addEventListener("click", () => {
+            advanceDays(1);
+        });
+
+        debugBtn.addEventListener("click", () => {
+            advanceDays(364); // 直接快轉快一年
+        });
+
+        function advanceDays(days) {
+            totalDays += days;
+            if (totalDays > 3650) {
+                totalDays = 3650;
+            }
+
+            // 計算年齡 (8歲起算，365天為一歲)
+            let elapsedYears = Math.floor((totalDays - 1) / 365);
+            ageYears = 8 + elapsedYears;
+            if (ageYears > 18) ageYears = 18;
+
+            let remainingDaysInYear = (totalDays - 1) % 365;
+            ageMonths = Math.floor(remainingDaysInYear / 30);
+
+            updateDisplay();
+
+            if (totalDays >= 3650) {
+                triggerEnding();
+            }
+        }
+
+        function updateDisplay() {
+            ageDisplay.innerText = `年齡：${ageYears} 歲 ${ageMonths} 個月`;
+            dayDisplay.innerText = `已度過天數：第 ${totalDays} 天 / 3650 天`;
+
+            // 隨機選一個日常事件顯示
+            let randomEvent = dailyEvents[Math.floor(Math.random() * dailyEvents.length)];
+            routineText.innerText = `[第 ${totalDays} 天] ${randomEvent}`;
+        }
+
+        function triggerEnding() {
+            const contentBox = document.getElementById("endingContent");
+            contentBox.innerHTML = endingParagraphs.map(p => `<p style="margin-bottom: 8px;">${p}</p>`).join("");
+            endingScreen.style.display = "flex";
+        }
+    </script>
+</body>
+</html>
