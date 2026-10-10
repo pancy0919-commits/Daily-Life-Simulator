@@ -23,7 +23,7 @@
         .game-container {
             width: 100%;
             max-width: 480px;
-            height: 420px;
+            height: 520px;
             background: linear-gradient(to bottom, #1e293b, #0f172a);
             border: 4px solid #38bdf8;
             border-radius: 12px;
@@ -35,48 +35,73 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 20px;
+            padding: 15px;
         }
         .status-box {
             width: 100%;
             background: rgba(30, 41, 59, 0.8);
             border: 1px solid #475569;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             box-sizing: border-box;
             text-align: center;
         }
         .age-display {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #f43f5e;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         .day-display {
-            font-size: 14px;
+            font-size: 13px;
             color: #94a3b8;
         }
+        
+        /* 圖片展示框 */
+        .image-frame {
+            width: 100%;
+            height: 180px;
+            background: #090d16;
+            border: 2px solid #38bdf8;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .image-emoji {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .image-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
         .routine-box {
             width: 100%;
             background: #0f172a;
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             box-sizing: border-box;
             text-align: center;
             border: 1px dashed #64748b;
         }
         .routine-text {
-            font-size: 15px;
+            font-size: 14px;
             color: #e2e8f0;
-            line-height: 1.6;
-            min-height: 50px;
+            line-height: 1.5;
+            min-height: 40px;
         }
         .action-btn {
             background-color: #38bdf8;
             color: #0f172a;
             width: 100%;
-            padding: 14px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 16px;
             font-weight: bold;
             border: none;
             border-radius: 8px;
@@ -115,13 +140,13 @@
 
         .debug-btn {
             position: absolute;
-            bottom: 8px;
+            bottom: 6px;
             right: 10px;
             background: #334155;
             color: #94a3b8;
             border: 1px solid #64748b;
-            padding: 4px 8px;
-            font-size: 11px;
+            padding: 3px 6px;
+            font-size: 10px;
             border-radius: 4px;
             cursor: pointer;
             z-index: 30;
@@ -136,7 +161,7 @@
             <h2 style="color: #38bdf8; margin-bottom: 10px; font-size: 20px;">🕰️ 十年：從8歲到18歲</h2>
             <p style="font-size: 13px; color: #cbd5e0; max-width: 320px; line-height: 1.6; margin: 0 0 15px 0;">
                 每天過著規律而平凡的生活。<br>
-                上學、放學、寫功課、睡覺。<br>
+                每句話都配有專屬的日常圖像與語錄。<br>
                 <b>當你度過 3,650 天（10年），抵達 18 歲那年，將迎來改變一切的瞬間。</b>
             </p>
             <button class="btn" id="startBtn">開始人生迴圈</button>
@@ -157,8 +182,14 @@
             <div class="day-display" id="dayDisplay">已度過天數：第 1 天 / 3650 天</div>
         </div>
 
+        <!-- 專屬圖片展示區 -->
+        <div class="image-frame" id="imageFrame">
+            <div class="image-emoji" id="imgEmoji">🪟☁️</div>
+            <div class="image-title" id="imgTitle">我想要長大</div>
+        </div>
+
         <div class="routine-box">
-            <div class="routine-text" id="routineText">今天又是平常的上學日。鬧鐘響起，吃完早餐，背上書包去學校。</div>
+            <div class="routine-text" id="routineText">早自習發呆，看著窗外的藍天白雲。</div>
         </div>
 
         <button class="action-btn" id="nextDayBtn">度過今天 (+1 天)</button>
@@ -174,15 +205,48 @@
             "你推開房門，陽光灑在臉上。背包裡裝著對未來的迷茫與憧憬，你終於走出了這個長達十年的日常迴圈。屬於你真正的冒險，現在才要開始。"
         ];
 
+        // 每句話都對應一張專屬圖片（Emoji與標題）與文字
         const dailyEvents = [
-            "今天又是平常的上學日。老師在黑板上寫著公式，窗外的陽光灑進教室。",
-            "放學後和朋友在巷子裡踢足球，夕陽把影子拉得好長好長。",
-            "周末的午後在家寫作業，媽媽端了一盤切好的水果放在桌上。",
-            "期中考結束了，拿著成績單回家，心裡祈禱著不要挨罵。",
-            "寒假的日子裡，窩在暖被窩裡看著電視卡通，時間彷彿慢了下來。",
-            "新的一學年開始了，換到了新的教室，隔壁座位坐了一個新同學。",
-            "夏天的蟬鳴聲吵雜而漫長，拿著零錢去巷口便利商店買了一支冰棒。",
-            "晚上坐在書桌前發呆，看著窗外的夜空，思考著長大後會變成什麼樣子。"
+            {
+                emoji: "🪟☁️",
+                title: "我想要長大",
+                text: "早自習發呆，看著窗外的藍天白雲。"
+            },
+            {
+                emoji: "✉️👩‍🏫",
+                title: "上課偷偷傳紙條",
+                text: "躲過老師的視線，和同學分享秘密。"
+            },
+            {
+                emoji: "⚽🌅",
+                title: "放學後踢足球",
+                text: "夕陽下拉長的影子，汗水和笑聲。"
+            },
+            {
+                emoji: "📝🏫",
+                title: "期中考的煎熬",
+                text: "筆尖在紙上沙沙作響，祈禱著好成績。"
+            },
+            {
+                emoji: "🍉📺",
+                title: "漫長的暑假午後",
+                text: "吹著冷氣吃西瓜，電視播著重播的卡通。"
+            },
+            {
+                emoji: "🚲🌳",
+                title: "巷口的小冒險",
+                text: "騎著腳踏車探索社區每一個角落。"
+            },
+            {
+                emoji: "🌧️🌂",
+                title: "雨天的放學路",
+                text: "踩著水漥，雨滴打在雨傘上的規律節奏。"
+            },
+            {
+                emoji: "🌙📖",
+                title: "深夜的檯燈下",
+                text: "寫不完的作業，伴隨著微弱的蟲鳴聲。"
+            }
         ];
 
         let totalDays = 1;
@@ -194,6 +258,8 @@
         const ageDisplay = document.getElementById("ageDisplay");
         const dayDisplay = document.getElementById("dayDisplay");
         const routineText = document.getElementById("routineText");
+        const imgEmoji = document.getElementById("imgEmoji");
+        const imgTitle = document.getElementById("imgTitle");
         const nextDayBtn = document.getElementById("nextDayBtn");
         const debugBtn = document.getElementById("debugBtn");
 
@@ -215,7 +281,7 @@
         });
 
         debugBtn.addEventListener("click", () => {
-            advanceDays(364); // 直接快轉快一年
+            advanceDays(364); // 快轉接近一年
         });
 
         function advanceDays(days) {
@@ -224,7 +290,6 @@
                 totalDays = 3650;
             }
 
-            // 計算年齡 (8歲起算，365天為一歲)
             let elapsedYears = Math.floor((totalDays - 1) / 365);
             ageYears = 8 + elapsedYears;
             if (ageYears > 18) ageYears = 18;
@@ -243,9 +308,11 @@
             ageDisplay.innerText = `年齡：${ageYears} 歲 ${ageMonths} 個月`;
             dayDisplay.innerText = `已度過天數：第 ${totalDays} 天 / 3650 天`;
 
-            // 隨機選一個日常事件顯示
-            let randomEvent = dailyEvents[Math.floor(Math.random() * dailyEvents.length)];
-            routineText.innerText = `[第 ${totalDays} 天] ${randomEvent}`;
+            // 隨機抽選一組圖文事件
+            let event = dailyEvents[Math.floor(Math.random() * dailyEvents.length)];
+            imgEmoji.innerText = event.emoji;
+            imgTitle.innerText = event.title;
+            routineText.innerText = `[第 ${totalDays} 天] ${event.text}`;
         }
 
         function triggerEnding() {
